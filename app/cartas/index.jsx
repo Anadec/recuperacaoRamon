@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, Button, Image, StyleSheet } from 'react-native';
+import { Text, View, Button, Image, StyleSheet, TextInput } from 'react-native';
 
 
 const cardImages = {
@@ -19,29 +19,46 @@ const App = () => {
     { name: 'EXODIA', attack: 8000, image: cardImages.Exodia },
     { name: 'REI_CAVEIRA', attack: 3500, image: cardImages.Rei_Caveira },
     { name: 'DRAGAO_BEBE', attack: 1000, image: cardImages.Bebe_Dragao },
-    
+
   ];
 
+
+  const checkCard1 = (value) => {
+    for (let index = 0; index < cards.length; index++) {
+      if (value === cards[index].name) {
+        setPlayerCard(cards[index]);
+        break
+      }
+    }
+  }
+  const checkCard2 = (value) => {
+    for (let index = 0; index < cards.length; index++) {
+      if(value == cards[index].name){
+        setOpponentCard(cards[index])
+        break
+      }
+    }
+  }
   const drawCard = () => {
     const randomCardIndex = Math.floor(Math.random() * cards.length);
     return cards[randomCardIndex];
   };
 
   const playRound = () => {
-    const playerDraw = drawCard();
-    const opponentDraw = drawCard();
-    
-    setPlayerCard(playerDraw);
-    setOpponentCard(opponentDraw);
-    
-    if (playerDraw.attack > opponentDraw.attack) {
-      setWinner( [playerDraw.name," Ganhou !"]);
-    } else if (playerDraw.attack < opponentDraw.attack) {
-      setWinner([opponentDraw.name," Ganhou !"]);
+    checkCard1(card1)
+    checkCard2(card2)
+
+    if (playerCard.attack > opponentCard.attack) {
+      setWinner("P1 Ganhou !");
+    } else if (playerCard.attack < opponentCard.attack) {
+      setWinner("P2 Ganhou !");
     } else {
       setWinner('Empate!');
     }
   };
+
+  const [card1, setCard1] = useState('')
+  const [card2, setCard2] = useState('')
 
   return (
     <View style={styles.container}>
@@ -58,6 +75,8 @@ const App = () => {
           <Text style={styles.cardText}>Ataque: {opponentCard?.attack || '0'}</Text>
         </View>
       </View>
+      <TextInput value={card1} placeholder='Escolha a primeira carta' onChangeText={setCard1} />
+      <TextInput value={card2} placeholder='Escolha a segunda carta' onChangeText={setCard2} />
       <Button title="Batalhar !" onPress={playRound} />
       <Text style={styles.result}>{winner}</Text>
     </View>
@@ -93,7 +112,7 @@ const styles = StyleSheet.create({
   },
   result: {
     fontSize: 25,
-    marginTop:25,
+    marginTop: 25,
   },
 });
 
